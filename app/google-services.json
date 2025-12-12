@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "217784898486",
+    "project_id": "wildnotes-b8a05",
+    "storage_bucket": "wildnotes-b8a05.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:217784898486:android:bd39fbf1b5780d326c6717",
+        "android_client_info": {
+          "package_name": "hsa.de"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBK80C1IubtZH60KEl5_WD8OEmqsTgn7sw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
