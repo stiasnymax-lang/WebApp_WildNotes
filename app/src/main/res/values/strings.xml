@@ -9,4 +9,14 @@
     <string name="register_Button">Register</string>
     <string name="logout">Logout</string>
     <string name="reset_password">Reset Password</string>
+    <string name="create_animal">Create Animal</string>
+    <string name="enclosure">Enclosure</string>
+    <string name="create_animal_button">Create Animal</string>
+    <string name="info_new_animal">Info</string>
+    <string name="name_new_animal">Name</string>
+    <string name="add_event">Add Event</string>
+    <string name="new_event_name">Name</string>
+    <string name="new_event_info">Info</string>
+    <string name="new_event_date">Date</string>
+    <string name="add_event_button">Add Event</string>
 </resources>
