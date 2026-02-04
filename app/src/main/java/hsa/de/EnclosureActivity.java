@@ -1,4 +1,6 @@
 package hsa.de;
 
-public class EnclosureActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class EnclosureActivity extends AppCompatActivity {
 }

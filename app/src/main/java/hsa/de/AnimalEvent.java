@@ -1,6 +1,8 @@
 package hsa.de;
 
-public class AnimalEvent {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class AnimalEvent extends AppCompatActivity {
 
     // Firestore Document-ID (wird NICHT automatisch gemappt)
     public String id;

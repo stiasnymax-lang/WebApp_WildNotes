@@ -1,4 +1,6 @@
 package hsa.de;
 
-public class MapActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MapActivity extends AppCompatActivity {
 }

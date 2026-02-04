@@ -1,4 +1,6 @@
 package hsa.de;
 
-public class EditEventActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class EditEventActivity extends AppCompatActivity {
 }

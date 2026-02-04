@@ -1,4 +1,6 @@
 package hsa.de;
 
-public class EditAnimalActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class EditAnimalActivity extends AppCompatActivity {
 }
