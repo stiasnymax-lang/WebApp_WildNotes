@@ -1,4 +1,6 @@
 package hsa.de;
 
-public class LibraryActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+public class LibraryActivity extends AppCompatActivity {
 }
