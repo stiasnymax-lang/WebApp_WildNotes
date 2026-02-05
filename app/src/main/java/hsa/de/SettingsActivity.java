@@ -103,9 +103,7 @@ public class SettingsActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
                             finish();
                             return true;
-
                         }
-
                         return false;
                     }
                 }
