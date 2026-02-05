@@ -9,7 +9,8 @@ public class Animal {
 
     public Animal() { }
 
-    public Animal(String name, String info, int enclosureNr) {
+    public Animal(String id, String name, String info, int enclosureNr) {
+        this.id = id;
         this.name = name;
         this.info = info;
         this.enclosureNr = enclosureNr;
