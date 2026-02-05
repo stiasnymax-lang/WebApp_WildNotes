@@ -1,5 +1,6 @@
 package hsa.de;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,10 +43,23 @@ public class LibraryActivity extends AppCompatActivity {
 
         searchBar = findViewById(R.id.search_bar);
 
-        adapter = new AnimalAdapter(this, animals);
+        adapter = new AnimalAdapter(this, animals, new AnimalAdapter.OnAnimalClickListener() {
+            @Override
+            public void onAnimalClick(Animal animal) {
+                if (animal == null || animal.getId() == null || animal.getId().isEmpty()) {
+                    Toast.makeText(LibraryActivity.this, "Fehler: animalId fehlt", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Intent intent = new Intent(LibraryActivity.this, AnimalActivity.class);
+                // AnimalActivity erwartet: getIntent().getStringExtra("animalId")
+                intent.putExtra("animalId", animal.getId());
+                startActivity(intent);
+            }
+        });
+
         recyclerView.setAdapter(adapter);
 
-        // Searchbar -> Filter im Adapter
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
