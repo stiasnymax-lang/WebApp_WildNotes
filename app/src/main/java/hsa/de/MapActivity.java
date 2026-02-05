@@ -1,8 +1,14 @@
 package hsa.de;
 
 import android.content.Intent;
+import android.graphics.Matrix;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +16,69 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class MapActivity extends AppCompatActivity {
+
     private BottomNavigationView bottomNavigation;
+    private ImageView mapImage;
+
+
+    private final List<PolygonHotspot> hotspots = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        mapImage = findViewById(R.id.mapImage);
+
+        // Bild setzen
+        mapImage.setImageResource(R.drawable.map_raw);
+        mapImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+        setupPolygonHotspots();
+
+        // Touch-Listener
+        mapImage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event.getAction() != MotionEvent.ACTION_UP) {
+                    return true;
+                }
+
+                v.performClick();
+
+                float[] imgPoint = viewPointToImagePoint(
+                        mapImage,
+                        event.getX(),
+                        event.getY()
+                );
+
+                if (imgPoint == null) {
+                    return true;
+                }
+
+                int enclosureNr = findEnclosureByPoint(imgPoint[0], imgPoint[1]);
+
+                if (enclosureNr != -1) {
+                    Intent intent = new Intent(MapActivity.this, EnclosureActivity.class);
+                    intent.putExtra("enclosureNr", enclosureNr);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(MapActivity.this,
+                            "Kein Gehege ausgewählt",
+                            Toast.LENGTH_SHORT).show();
+                }
+
+                return true;
+            }
+        });
+
+        // Bottom Navigation
         bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.map);
 
@@ -24,34 +86,139 @@ public class MapActivity extends AppCompatActivity {
                 new NavigationBarView.OnItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
                         int id = item.getItemId();
 
-                        if (id == R.id.settings) {
+                        if (id == R.id.map) {
                             return true;
-                        }
-                        else if (id == R.id.home) {
+                        } else if (id == R.id.home) {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             finish();
                             return true;
-
                         } else if (id == R.id.settings) {
                             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                             finish();
                             return true;
-
                         } else if (id == R.id.add) {
                             startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
                             finish();
                             return true;
-
                         } else if (id == R.id.library) {
                             startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
                             finish();
                             return true;
                         }
+
                         return false;
                     }
                 }
         );
+    }
+
+    // Polygon-Gehege definieren
+    private void setupPolygonHotspots() {
+        hotspots.clear();
+
+        hotspots.add(new PolygonHotspot(
+                1,
+                Arrays.asList(
+                        new PointF(422, 637),
+                        new PointF(477, 677),
+                        new PointF(427, 740),
+                        new PointF(406, 733),
+                        new PointF(336, 816),
+                        new PointF(300, 791)
+                )
+        ));
+
+        hotspots.add(new PolygonHotspot(
+                2,
+                Arrays.asList(
+                        new PointF(598, 607),
+                        new PointF(539, 675),
+                        new PointF(568, 691),
+                        new PointF(619, 689),
+                        new PointF(654, 707),
+                        new PointF(681, 737),
+                        new PointF(720, 694)
+                )
+        ));
+
+        hotspots.add(new PolygonHotspot(
+                3,
+                Arrays.asList(
+                        new PointF(724, 736),
+                        new PointF(764, 694),
+                        new PointF(815, 728),
+                        new PointF(774, 776)
+                )
+        ));
+        hotspots.add(new PolygonHotspot(
+                4,
+                Arrays.asList(
+                        new PointF(903, 619),
+                        new PointF(776, 780),
+                        new PointF(708, 844),
+                        new PointF(779, 908),
+                        new PointF(975, 701)
+                )
+        ));
+    }
+
+    // Prüft, welches Gehege angeklickt wurde
+    private int findEnclosureByPoint(float x, float y) {
+        for (PolygonHotspot h : hotspots) {
+            if (pointInPolygon(x, y, h.points)) {
+                return h.enclosureNr;
+            }
+        }
+        return -1;
+    }
+
+    // Point-in-Polygon (Ray Casting)
+    private boolean pointInPolygon(float x, float y, List<PointF> poly) {
+        boolean inside = false;
+        int n = poly.size();
+
+        for (int i = 0, j = n - 1; i < n; j = i++) {
+            float xi = poly.get(i).x;
+            float yi = poly.get(i).y;
+            float xj = poly.get(j).x;
+            float yj = poly.get(j).y;
+
+            boolean intersect =
+                    ((yi > y) != (yj > y)) &&
+                            (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+            if (intersect) {
+                inside = !inside;
+            }
+        }
+        return inside;
+    }
+
+    // View-Koordinaten → Bild-Koordinaten
+    private float[] viewPointToImagePoint(ImageView imageView, float vx, float vy) {
+        if (imageView.getDrawable() == null) {
+            return null;
+        }
+
+        Matrix inverse = new Matrix();
+        imageView.getImageMatrix().invert(inverse);
+
+        float[] pts = new float[]{vx, vy};
+        inverse.mapPoints(pts);
+        return pts;
+    }
+
+    // Helper-Klasse für Polygon-Gehege
+    private static class PolygonHotspot {
+        final int enclosureNr;
+        final List<PointF> points;
+
+        PolygonHotspot(int enclosureNr, List<PointF> points) {
+            this.enclosureNr = enclosureNr;
+            this.points = points;
+        }
     }
 }
