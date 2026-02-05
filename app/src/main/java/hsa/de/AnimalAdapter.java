@@ -14,16 +14,19 @@ import java.util.Locale;
 
 public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalViewHolder> {
 
+    public interface OnAnimalClickListener {
+        void onAnimalClick(Animal animal);
+    }
+
     private final Context context;
+    private final OnAnimalClickListener listener;
 
-    // Liste, die angezeigt wird
     private final ArrayList<Animal> visibleList = new ArrayList<>();
-
-    // komplette Liste (für Filter)
     private final ArrayList<Animal> fullList = new ArrayList<>();
 
-    public AnimalAdapter(Context context, ArrayList<Animal> initial) {
+    public AnimalAdapter(Context context, ArrayList<Animal> initial, OnAnimalClickListener listener) {
         this.context = context;
+        this.listener = listener;
         setData(initial);
     }
 
@@ -52,7 +55,6 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
                 String info = (a.getInfo() == null) ? "" : a.getInfo().toLowerCase(Locale.getDefault());
                 String enclosure = String.valueOf(a.getEnclosureNr());
 
-                // Suche in Name, Info, GehegeNr
                 if (name.contains(q) || info.contains(q) || enclosure.contains(q)) {
                     visibleList.add(a);
                 }
@@ -71,11 +73,20 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
 
     @Override
     public void onBindViewHolder(@NonNull AnimalViewHolder holder, int position) {
-        Animal a = visibleList.get(position);
+        final Animal a = visibleList.get(position);
 
         holder.tvName.setText(a.getName() != null ? a.getName() : "");
         holder.tvInfo.setText(a.getInfo() != null ? a.getInfo() : "");
         holder.tvEnclosure.setText("Gehege: " + a.getEnclosureNr());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onAnimalClick(a);
+                }
+            }
+        });
     }
 
     @Override

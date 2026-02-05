@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -27,6 +30,10 @@ public class AnimalActivity extends AppCompatActivity {
 
     private Button btDeleteAnimal;
     private Button btEditAnimal;
+
+    private TextView animal_name;
+    private TextView animal_info;
+    private TextView animal_enclosure;
 
     private FirebaseFirestore db;
 
@@ -49,7 +56,10 @@ public class AnimalActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.events_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // Adapter: Klick auf Event -> EventActivity öffnen
+        animal_name = findViewById(R.id.animal_name);
+        animal_info = findViewById(R.id.animal_info);
+        animal_enclosure = findViewById(R.id.animal_enclosure);
+
         adapter = new EventAdapter(events, new EventAdapter.OnEventClickListener() {
             @Override
             public void onEventClick(AnimalEvent event) {
@@ -81,7 +91,51 @@ public class AnimalActivity extends AppCompatActivity {
             }
         });
 
+        // ✅ NEU: Animal-Daten (Name/Info/Gehege) laden
+        loadAnimalDetails(animalId);
+
+        // Events laden
         loadEventsFirestore(animalId);
+    }
+
+    // ✅ NEU: Animal-Dokument laden und TextViews setzen
+    private void loadAnimalDetails(String animalId) {
+        db.collection("animals")
+                .document(animalId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot doc) {
+                        if (doc == null || !doc.exists()) {
+                            Toast.makeText(AnimalActivity.this, "Tier nicht gefunden", Toast.LENGTH_LONG).show();
+                            finish();
+                            return;
+                        }
+
+                        String name = doc.getString("name");
+                        String info = doc.getString("info");
+
+                        // enclosureNr kann als Long kommen, wenn Firestore es so speichert
+                        Long enclosureNrLong = doc.getLong("enclosureNr");
+
+                        animal_name.setText(name != null ? name : "");
+                        animal_info.setText(info != null ? info : "");
+
+                        if (enclosureNrLong != null) {
+                            animal_enclosure.setText("Gehege: " + enclosureNrLong);
+                        } else {
+                            animal_enclosure.setText("Gehege: ");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(AnimalActivity.this,
+                                "Fehler beim Laden des Tiers: " + e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void loadEventsFirestore(String animalId) {
@@ -103,7 +157,7 @@ public class AnimalActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(@NonNull Exception e) {
                         Toast.makeText(
                                 AnimalActivity.this,
                                 "Fehler beim Laden: " + e.getMessage(),
@@ -130,7 +184,7 @@ public class AnimalActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure(Exception e) {
+                    public void onFailure(@NonNull Exception e) {
                         Toast.makeText(
                                 AnimalActivity.this,
                                 "Fehler beim Löschen: " + e.getMessage(),
