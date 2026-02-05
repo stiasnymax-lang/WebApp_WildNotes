@@ -1,7 +1,9 @@
 package hsa.de;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,6 +25,8 @@ public class EventActivity extends AppCompatActivity {
     private TextView tvName;
     private TextView tvInfo;
     private TextView tvDate;
+
+    private NavigationBarView bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,45 @@ public class EventActivity extends AppCompatActivity {
         }
 
         loadEventById(eventId);
+
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.home);
+
+        bottomNavigation.setOnItemSelectedListener(
+                new NavigationBarView.OnItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        int id = item.getItemId();
+
+                        if (id == R.id.settings) {
+                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                            finish();
+                            return true;
+                        }
+                        else if (id == R.id.home) {
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.settings) {
+                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.add) {
+                            startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.library) {
+                            startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
+                            finish();
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+        );
     }
 
     private void loadEventById(String eventId) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -26,8 +29,9 @@ public class LibraryActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private AnimalAdapter adapter;
-
     private EditText searchBar;
+
+    private BottomNavigationView bottomNavigation;
 
     private final ArrayList<Animal> animals = new ArrayList<>();
 
@@ -74,6 +78,43 @@ public class LibraryActivity extends AppCompatActivity {
         });
 
         loadAnimals();
+
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.library);
+
+        bottomNavigation.setOnItemSelectedListener(
+                new NavigationBarView.OnItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        int id = item.getItemId();
+
+                        if (id == R.id.settings) {
+                            return true;
+                        }
+                        else if (id == R.id.home) {
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.settings) {
+                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.add) {
+                            startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.library) {
+                            startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
+                            finish();
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+        );
     }
 
     private void loadAnimals() {
