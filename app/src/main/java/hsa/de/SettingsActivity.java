@@ -2,16 +2,22 @@ package hsa.de;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -20,7 +26,7 @@ public class SettingsActivity extends AppCompatActivity {
     Button button_reset;
     TextView textView;
     FirebaseUser user;
-    EditText new_password;
+    private BottomNavigationView bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,8 @@ public class SettingsActivity extends AppCompatActivity {
         textView = findViewById(R.id.user_details);
         user = auth.getCurrentUser();
         button_reset = findViewById(R.id.reset_password);
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.settings);
 
 
         if (user == null) {
@@ -66,6 +74,42 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
         });
+
+        bottomNavigation.setOnItemSelectedListener(
+                new NavigationBarView.OnItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        int id = item.getItemId();
+
+                        if (id == R.id.settings) {
+                            return true;
+                        }
+                        else if (id == R.id.home) {
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.map) {
+                            startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.add) {
+                            startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.library) {
+                            startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
+                            finish();
+                            return true;
+
+                        }
+
+                        return false;
+                    }
+                }
+        );
     }
 
 

@@ -20,6 +20,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home); // z.B. activity_main
 
         bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.home);
 
         bottomNavigation.setOnItemSelectedListener(
                 new NavigationBarView.OnItemSelectedListener() {
@@ -31,22 +32,22 @@ public class HomeActivity extends AppCompatActivity {
                             return true;
 
                         } else if (id == R.id.map) {
-                            startActivity(new Intent(HomeActivity.this, MapActivity.class));
+                            startActivity(new Intent(getApplicationContext(), MapActivity.class));
                             finish();
                             return true;
 
                         } else if (id == R.id.add) {
-                            startActivity(new Intent(HomeActivity.this, AddAnimalActivity.class));
+                            startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
                             finish();
                             return true;
 
                         } else if (id == R.id.library) {
-                            startActivity(new Intent(HomeActivity.this, LibraryActivity.class));
+                            startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
                             finish();
                             return true;
 
                         } else if (id == R.id.settings) {
-                            startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
+                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                             finish();
                             return true;
                         }
