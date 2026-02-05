@@ -2,6 +2,7 @@ package hsa.de;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -38,6 +41,7 @@ public class AnimalActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private String animalId;
+    private BottomNavigationView bottomNavigation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,6 +100,45 @@ public class AnimalActivity extends AppCompatActivity {
 
         // Events laden
         loadEventsFirestore(animalId);
+
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.home);
+
+        bottomNavigation.setOnItemSelectedListener(
+                new NavigationBarView.OnItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        int id = item.getItemId();
+
+                        if (id == R.id.settings) {
+                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                            finish();
+                            return true;
+                        }
+                        else if (id == R.id.home) {
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.settings) {
+                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.add) {
+                            startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.library) {
+                            startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
+                            finish();
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+        );
     }
 
     // ✅ NEU: Animal-Dokument laden und TextViews setzen
