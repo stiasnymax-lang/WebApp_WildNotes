@@ -85,42 +85,46 @@ public class MapActivity extends AppCompatActivity {
         hotspots.add(new PolygonHotspot(
                 1,
                 Arrays.asList(
-                        new PointF(422, 477),
-                        new PointF(300, 1029),
-                        new PointF(336, 1053),
-                        new PointF(406, 971),
-                        new PointF(426, 980),
-                        new PointF(477, 917)
+                        new PointF(1112, 1666),
+                        new PointF(787, 2068),
+                        new PointF(884, 2144),
+                        new PointF(1065, 1921),
+                        new PointF(1115, 1942),
+                        new PointF(1254, 1782)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 2,
                 Arrays.asList(
-                        new PointF(0, 0),
-                        new PointF(0, 2400),
-                        new PointF(1080, 2400),
-                        new PointF(1080, 0)
+                        new PointF(1569, 1600),
+                        new PointF(1417, 1766),
+                        new PointF(1485, 1816),
+                        new PointF(1627, 1816),
+                        new PointF(1724, 1866),
+                        new PointF(1787, 1934),
+                        new PointF(1900, 1824)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 3,
                 Arrays.asList(
-                        new PointF(724, 736),
-                        new PointF(764, 694),
-                        new PointF(815, 728),
-                        new PointF(774, 776)
+                        new PointF(2005, 1824),
+                        new PointF(1900, 1934),
+                        new PointF(2031, 2047),
+                        new PointF(2131, 1908)
                 )
         ));
         hotspots.add(new PolygonHotspot(
                 4,
                 Arrays.asList(
-                        new PointF(903, 619),
-                        new PointF(776, 780),
-                        new PointF(708, 844),
-                        new PointF(779, 908),
-                        new PointF(975, 701)
+                        new PointF(2367, 1622),
+                        new PointF(2136, 1913),
+                        new PointF(2031, 2047),
+                        new PointF(1885, 2207),
+                        new PointF(2031, 2388),
+                        new PointF(2504, 1845)
                 )
         ));
     }

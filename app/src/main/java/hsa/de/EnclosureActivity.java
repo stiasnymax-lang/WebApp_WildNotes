@@ -103,6 +103,10 @@ public class EnclosureActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
                             finish();
                             return true;
+                        } else if (id == R.id.map) {
+                            startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                            finish();
+                            return true;
                         }
                         return false;
                     }
