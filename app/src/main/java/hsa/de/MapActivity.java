@@ -22,7 +22,6 @@ import java.util.List;
 
 public class MapActivity extends AppCompatActivity {
 
-    private BottomNavigationView bottomNavigation;
     private ImageView mapImage;
 
 
@@ -77,42 +76,6 @@ public class MapActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        // Bottom Navigation
-        bottomNavigation = findViewById(R.id.bottomNavigation);
-        bottomNavigation.setSelectedItemId(R.id.map);
-
-        bottomNavigation.setOnItemSelectedListener(
-                new NavigationBarView.OnItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-                        int id = item.getItemId();
-
-                        if (id == R.id.map) {
-                            return true;
-                        } else if (id == R.id.home) {
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                            finish();
-                            return true;
-                        } else if (id == R.id.settings) {
-                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-                            finish();
-                            return true;
-                        } else if (id == R.id.add) {
-                            startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
-                            finish();
-                            return true;
-                        } else if (id == R.id.library) {
-                            startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
-                            finish();
-                            return true;
-                        }
-
-                        return false;
-                    }
-                }
-        );
     }
 
     // Polygon-Gehege definieren
@@ -122,25 +85,22 @@ public class MapActivity extends AppCompatActivity {
         hotspots.add(new PolygonHotspot(
                 1,
                 Arrays.asList(
-                        new PointF(422, 637),
-                        new PointF(477, 677),
-                        new PointF(427, 740),
-                        new PointF(406, 733),
-                        new PointF(336, 816),
-                        new PointF(300, 791)
+                        new PointF(422, 477),
+                        new PointF(300, 1029),
+                        new PointF(336, 1053),
+                        new PointF(406, 971),
+                        new PointF(426, 980),
+                        new PointF(477, 917)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 2,
                 Arrays.asList(
-                        new PointF(598, 607),
-                        new PointF(539, 675),
-                        new PointF(568, 691),
-                        new PointF(619, 689),
-                        new PointF(654, 707),
-                        new PointF(681, 737),
-                        new PointF(720, 694)
+                        new PointF(0, 0),
+                        new PointF(0, 2400),
+                        new PointF(1080, 2400),
+                        new PointF(1080, 0)
                 )
         ));
 

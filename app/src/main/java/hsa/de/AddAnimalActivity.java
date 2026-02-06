@@ -1,16 +1,20 @@
 package hsa.de;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -25,6 +29,7 @@ public class AddAnimalActivity extends AppCompatActivity {
     private EditText info;
     private EditText enclosure;
     private Button create_animal;
+    private NavigationBarView bottomNavigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,42 @@ public class AddAnimalActivity extends AppCompatActivity {
                 saveAnimalToFirestore();
             }
         });
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.add);
+
+        bottomNavigation.setOnItemSelectedListener(
+                new NavigationBarView.OnItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        int id = item.getItemId();
+
+                        if (id == R.id.add) {
+                            return true;
+                        }
+                        else if (id == R.id.home) {
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.settings) {
+                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.map) {
+                            startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                            finish();
+                            return true;
+
+                        } else if (id == R.id.library) {
+                            startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
+                            finish();
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+        );
     }
 
     private void saveAnimalToFirestore() {
