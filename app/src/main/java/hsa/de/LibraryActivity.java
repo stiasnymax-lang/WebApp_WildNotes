@@ -88,7 +88,7 @@ public class LibraryActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         int id = item.getItemId();
 
-                        if (id == R.id.settings) {
+                        if (id == R.id.library) {
                             return true;
                         }
                         else if (id == R.id.home) {
@@ -106,8 +106,8 @@ public class LibraryActivity extends AppCompatActivity {
                             finish();
                             return true;
 
-                        } else if (id == R.id.library) {
-                            startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
+                        } else if (id == R.id.map) {
+                            startActivity(new Intent(getApplicationContext(), MapActivity.class));
                             finish();
                             return true;
                         }
