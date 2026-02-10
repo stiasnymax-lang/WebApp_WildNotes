@@ -25,7 +25,7 @@
     <EditText
         android:id="@+id/name"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="@string/name_new_animal"
         android:inputType="text"
         android:layout_marginTop="24dp"
@@ -39,7 +39,7 @@
     <EditText
         android:id="@+id/info"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="@string/info_new_animal"
         android:inputType="text"
         android:layout_marginTop="12dp"
@@ -53,7 +53,7 @@
     <EditText
         android:id="@+id/enclosure"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:hint="@string/enclosure"
         android:inputType="text"
         android:layout_marginTop="12dp"
