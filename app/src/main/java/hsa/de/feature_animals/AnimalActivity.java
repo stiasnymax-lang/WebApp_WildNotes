@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_animals;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +24,14 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import hsa.de.core.HomeActivity;
+import hsa.de.core.LibraryActivity;
+import hsa.de.R;
+import hsa.de.core.SettingsActivity;
+import hsa.de.feature_events.AnimalEvent;
+import hsa.de.feature_events.EventActivity;
+import hsa.de.feature_events.EventAdapter;
 
 public class AnimalActivity extends AppCompatActivity {
 
