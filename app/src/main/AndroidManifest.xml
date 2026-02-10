@@ -21,19 +21,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".AddAnimalActivity" />
-        <activity android:name=".AddEventActivity" />
-        <activity android:name=".AnimalActivity" />
-        <activity android:name=".EditAnimalActivity" />
-        <activity android:name=".EditEventActivity" />
-        <activity android:name=".EnclosureActivity" />
-        <activity android:name=".EventActivity" />
-        <activity android:name=".LibraryActivity" />
-        <activity android:name=".MapActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".auth.LoginActivity" />
+        <activity android:name=".auth.RegisterActivity" />
+        <activity android:name=".core.HomeActivity" />
+        <activity android:name=".feature_animals.AddAnimalActivity" />
+        <activity android:name=".feature_events.AddEventActivity" />
+        <activity android:name=".feature_animals.AnimalActivity" />
+        <activity android:name=".feature_animals.EditAnimalActivity" />
+        <activity android:name=".feature_events.EditEventActivity" />
+        <activity android:name=".core.EnclosureActivity" />
+        <activity android:name=".feature_events.EventActivity" />
+        <activity android:name=".core.LibraryActivity" />
+        <activity android:name=".core.MapActivity" />
+        <activity android:name=".core.SettingsActivity" />
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_events;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,16 +10,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import hsa.de.R;
+
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
 
     public interface OnEventClickListener {
-        void onEventClick(AnimalEvent event);
+        void onEventClick(String animalId, Event event);
     }
 
-    private final List<AnimalEvent> events;
+    private final List<Event> events;
+    private final String animalId;
     private final OnEventClickListener listener;
 
-    public EventAdapter(List<AnimalEvent> events, OnEventClickListener listener) {
+    public EventAdapter(String animalId, List<Event> events, OnEventClickListener listener) {
+        this.animalId = animalId;
         this.events = events;
         this.listener = listener;
     }
@@ -27,20 +31,25 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_event, parent, false);
         return new EventViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        AnimalEvent event = events.get(position);
+        final Event event = events.get(position);
 
         holder.name.setText(event.name);
         holder.date.setText(event.date);
 
-        // ✅ GANZES ITEM ANKLICKBAR
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) listener.onEventClick(event);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onEventClick(animalId, event);
+                }
+            }
         });
     }
 
@@ -59,4 +68,3 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
     }
 }
-

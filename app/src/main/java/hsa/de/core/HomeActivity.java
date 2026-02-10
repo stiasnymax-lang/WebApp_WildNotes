@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.core;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
+
+import hsa.de.R;
+import hsa.de.feature_animals.AddAnimalActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
