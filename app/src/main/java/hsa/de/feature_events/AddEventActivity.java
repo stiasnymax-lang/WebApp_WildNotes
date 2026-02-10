@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_events;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +10,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import hsa.de.R;
 
 public class AddEventActivity extends AppCompatActivity {
 
@@ -28,12 +29,21 @@ public class AddEventActivity extends AppCompatActivity {
     private EditText Date;
     private Button create_event;
 
+    private String animalId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
         db = FirebaseFirestore.getInstance();
+
+        animalId = getIntent().getStringExtra("animalId");
+        if (animalId == null || animalId.isEmpty()) {
+            Toast.makeText(this, "Fehler: animalId fehlt", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
         Name = findViewById(R.id.event_name);
         Info = findViewById(R.id.event_info);
@@ -53,36 +63,26 @@ public class AddEventActivity extends AppCompatActivity {
         String infoText = Info.getText().toString().trim();
         String dateText = Date.getText().toString().trim();
 
-        if (nameText.isEmpty()) {
-            Name.setError("Bitte Namen eingeben");
-            return;
-        }
-        if (infoText.isEmpty()) {
-            Info.setError("Bitte Info eingeben");
-            return;
-        }
-        if (dateText.isEmpty()) {
-            Date.setError("Bitte Datum eingeben");
-            return;
-        }
+        if (nameText.isEmpty()) { Name.setError("Bitte Namen eingeben"); return; }
+        if (infoText.isEmpty()) { Info.setError("Bitte Info eingeben"); return; }
+        if (dateText.isEmpty()) { Date.setError("Bitte Datum eingeben"); return; }
 
         Map<String, Object> event = new HashMap<>();
         event.put("name", nameText);
         event.put("info", infoText);
         event.put("date", dateText);
 
-        db.collection("events")
+        // Speichern unter animals/{animalId}/events
+        db.collection("animals")
+                .document(animalId)
+                .collection("events")
                 .add(event)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "Event added with ID: " + documentReference.getId());
-                        Toast.makeText(AddEventActivity.this,
-                                "Event gespeichert!", Toast.LENGTH_SHORT).show();
-
-                        Name.setText("");
-                        Info.setText("");
-                        Date.setText("");
+                        Toast.makeText(AddEventActivity.this, "Event gespeichert!", Toast.LENGTH_SHORT).show();
+                        finish(); // zurück
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

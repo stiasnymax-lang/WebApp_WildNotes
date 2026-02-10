@@ -2,15 +2,17 @@ package hsa.de;
 
 import android.os.Bundle;
 import android.view.View;
-import androidx.annotation.NonNull;
+
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Button;
-import android.widget.Toast;
 import android.content.Intent;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.auth.AuthResult;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import hsa.de.auth.LoginActivity;
+import hsa.de.auth.RegisterActivity;
+import hsa.de.core.HomeActivity;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_animals;
 
 public class Animal {
 

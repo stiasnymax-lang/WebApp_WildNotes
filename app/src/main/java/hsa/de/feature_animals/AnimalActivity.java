@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_animals;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,14 +25,24 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+import hsa.de.core.HomeActivity;
+import hsa.de.core.LibraryActivity;
+import hsa.de.R;
+import hsa.de.core.SettingsActivity;
+import hsa.de.feature_events.AddEventActivity;
+import hsa.de.feature_events.Event;
+import hsa.de.feature_events.EventActivity;
+import hsa.de.feature_events.EventAdapter;
+
 public class AnimalActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private EventAdapter adapter;
-    private final ArrayList<AnimalEvent> events = new ArrayList<>();
+    private final ArrayList<Event> events = new ArrayList<>();
 
     private Button btDeleteAnimal;
     private Button btEditAnimal;
+    private Button btAddEvents;
 
     private TextView animal_name;
     private TextView animal_info;
@@ -64,20 +74,20 @@ public class AnimalActivity extends AppCompatActivity {
         animal_info = findViewById(R.id.animal_info);
         animal_enclosure = findViewById(R.id.animal_enclosure);
 
-        adapter = new EventAdapter(events, new EventAdapter.OnEventClickListener() {
+        adapter = new EventAdapter(animalId, events, new EventAdapter.OnEventClickListener() {
             @Override
-            public void onEventClick(AnimalEvent event) {
+            public void onEventClick(String aId, Event event) {
                 Intent intent = new Intent(AnimalActivity.this, EventActivity.class);
-                intent.putExtra("ANIMAL_ID", animalId);
-                intent.putExtra("EVENT_ID", event.id);
+                intent.putExtra("animalId", aId);
+                intent.putExtra("eventId", event.id);
                 startActivity(intent);
             }
         });
-
         recyclerView.setAdapter(adapter);
 
         btDeleteAnimal = findViewById(R.id.delete_animal);
         btEditAnimal = findViewById(R.id.edit_animal);
+        btAddEvents = findViewById(R.id.add_event);
 
         btDeleteAnimal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +105,16 @@ public class AnimalActivity extends AppCompatActivity {
             }
         });
 
-        // ✅ NEU: Animal-Daten (Name/Info/Gehege) laden
+        btAddEvents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AnimalActivity.this, AddEventActivity.class);
+                intent.putExtra("animalId", animalId);
+                startActivity(intent);
+            }
+        });
+
+        // NEU: Animal-Daten (Name/Info/Gehege) laden
         loadAnimalDetails(animalId);
 
         // Events laden
@@ -191,7 +210,7 @@ public class AnimalActivity extends AppCompatActivity {
                     public void onSuccess(QuerySnapshot querySnapshot) {
                         events.clear();
                         for (QueryDocumentSnapshot doc : querySnapshot) {
-                            AnimalEvent e = doc.toObject(AnimalEvent.class);
+                            Event e = doc.toObject(Event.class);
                             e.id = doc.getId();
                             events.add(e);
                         }
@@ -235,5 +254,11 @@ public class AnimalActivity extends AppCompatActivity {
                         ).show();
                     }
                 });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Events neu laden, wenn man von AddEventActivity zurückkommt
+        loadEventsFirestore(animalId);
     }
 }
