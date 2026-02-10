@@ -29,6 +29,11 @@ import hsa.de.feature_animals.Animal;
 import hsa.de.feature_animals.AnimalActivity;
 import hsa.de.feature_animals.AnimalAdapter;
 
+/**
+ * Activity für die Bibliothek/Übersicht aller Tiere
+ * Zeigt alle Tiere aus Firestore in einer RecyclerView an
+ * und bietet eine Suchleiste zum Filtern nach Name/Info/Gehege
+ */
 public class LibraryActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
@@ -39,6 +44,7 @@ public class LibraryActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
 
+    // Lokale Liste aller Tiere (wird aus Firestore gefüllt)
     private final ArrayList<Animal> animals = new ArrayList<>();
 
     @Override
@@ -46,21 +52,30 @@ public class LibraryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
 
+        // Firestore initialisieren
         db = FirebaseFirestore.getInstance();
 
+        /**
+         * RecyclerView einrichten:
+         * - LayoutManager (vertikale Liste)
+         * - Adapter mit Klick-Listener
+         */
         recyclerView = findViewById(R.id.recycler_animals);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        searchBar = findViewById(R.id.search_bar);
-
-        adapter = new AnimalAdapter(this, animals, new AnimalAdapter.OnAnimalClickListener() {
+        adapter = new AnimalAdapter(animals, new AnimalAdapter.OnAnimalClickListener() {
             @Override
             public void onAnimalClick(Animal animal) {
+
+                // Sicherheitscheck: Tier muss eine gültige ID haben
                 if (animal == null || animal.getId() == null || animal.getId().isEmpty()) {
-                    Toast.makeText(LibraryActivity.this, "Fehler: animalId fehlt", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LibraryActivity.this,
+                            "Fehler: animalId fehlt",
+                            Toast.LENGTH_LONG).show();
                     return;
                 }
 
+                // Detailansicht des Tieres öffnen
                 Intent intent = new Intent(LibraryActivity.this, AnimalActivity.class);
                 // AnimalActivity erwartet: getIntent().getStringExtra("animalId")
                 intent.putExtra("animalId", animal.getId());
@@ -70,12 +85,16 @@ public class LibraryActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
+        //Suchleiste: Filtert die Liste während der Eingabe
+        searchBar = findViewById(R.id.search_bar);
+
         searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Filterfunktion des Adapters aufrufen
                 adapter.filter(s.toString());
             }
 
@@ -83,8 +102,10 @@ public class LibraryActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) { }
         });
 
+        // Tiere beim Start laden
         loadAnimals();
 
+        // Bottom Navigation konfigurieren: Navigation zwischen den Hauptbereichen der App
         bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.library);
 
@@ -94,10 +115,11 @@ public class LibraryActivity extends AppCompatActivity {
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         int id = item.getItemId();
 
+                        // Aktuelle Seite (Library)
                         if (id == R.id.library) {
                             return true;
-                        }
-                        else if (id == R.id.home) {
+
+                        } else if (id == R.id.home) {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             finish();
                             return true;
@@ -123,20 +145,30 @@ public class LibraryActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Lädt alle Tiere aus der Firestore-Collection "animals"
+     * und aktualisiert den RecyclerView-Adapter
+     */
     private void loadAnimals() {
         db.collection("animals")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot querySnapshot) {
+
+                        // Alte Daten entfernen
                         animals.clear();
 
+                        // Alle Dokumente in Animal-Objekte umwandeln
                         for (QueryDocumentSnapshot doc : querySnapshot) {
                             Animal a = doc.toObject(Animal.class);
-                            a.setId(doc.getId()); // Document-ID merken
+
+                            // Document-ID separat setzen (wird für Detailansicht benötigt)
+                            a.setId(doc.getId());
                             animals.add(a);
                         }
 
+                        // Adapter aktualisieren (setzt fullList + displayList)
                         adapter.setData(animals);
                     }
                 })

@@ -21,7 +21,6 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.ViewHolder
         void onAnimalClick(Animal animal);
     }
 
-    private final Context context;
     private final OnAnimalClickListener listener;
 
     // Für Anzeige (gefilterte Liste)
@@ -30,8 +29,7 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.ViewHolder
     // Master-Liste (alle Tiere, ungefiltert)
     private final List<Animal> fullList = new ArrayList<>();
 
-    public AnimalAdapter(Context context, List<Animal> animals, OnAnimalClickListener listener) {
-        this.context = context;
+    public AnimalAdapter(List<Animal> animals, OnAnimalClickListener listener) {
         this.listener = listener;
 
         if (animals != null) {
@@ -71,10 +69,10 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.ViewHolder
         return displayList.size();
     }
 
-    /**
-     * Wird von LibraryActivity nach dem Firestore-Laden aufgerufen.
-     * Aktualisiert sowohl die Full-Liste als auch die Anzeige-Liste.
-     */
+
+    // Wird von LibraryActivity nach dem Firestore-Laden aufgerufen
+    // Aktualisiert sowohl die Full-Liste als auch die Anzeige-Liste
+
     public void setData(List<Animal> newAnimals) {
         fullList.clear();
         displayList.clear();
@@ -87,9 +85,7 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.ViewHolder
         notifyDataSetChanged();
     }
 
-    /**
-     * Einfache Suche über Name, Info und Gehege-Nr.
-     */
+    // Einfache Suche über Name, Info und Gehege-Nr.
     public void filter(String query) {
         String q = (query == null) ? "" : query.trim().toLowerCase(Locale.getDefault());
 

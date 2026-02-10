@@ -17,11 +17,17 @@ import java.util.List;
 
 import hsa.de.R;
 
+/**
+ * Activity zur Anzeige der Zookarte
+ * Über Polygon-Hotspots können einzelne Gehege angeklickt werden
+ * Bei Auswahl eines Geheges wird die EnclosureActivity geöffnet
+ */
 public class MapActivity extends AppCompatActivity {
 
+    // ImageView für die Zookarte
     private ImageView mapImage;
 
-
+    // Liste aller definierten Polygon-Hotspots (Gehege)
     private final List<PolygonHotspot> hotspots = new ArrayList<>();
 
     @Override
@@ -31,23 +37,31 @@ public class MapActivity extends AppCompatActivity {
 
         mapImage = findViewById(R.id.mapImage);
 
-        // Bild setzen
+        // Zookarten-Bild setzen und skalieren
         mapImage.setImageResource(R.drawable.map_raw);
         mapImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
+        // Polygon-Gehege initialisieren
         setupPolygonHotspots();
 
-        // Touch-Listener
+        /**
+         * Touch-Listener für die Karte
+         * Ermittelt die Klickposition und prüft
+         * ob ein Gehege (Polygon) getroffen wurde
+         */
         mapImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
+                // Nur bei Loslassen des Fingers reagieren
                 if (event.getAction() != MotionEvent.ACTION_UP) {
                     return true;
                 }
 
+                // Für Accessibility (Pflicht bei TouchListener)
                 v.performClick();
 
+                // Touch-Koordinaten (View) in Bild-Koordinaten umrechnen
                 float[] imgPoint = viewPointToImagePoint(
                         mapImage,
                         event.getX(),
@@ -58,13 +72,16 @@ public class MapActivity extends AppCompatActivity {
                     return true;
                 }
 
+                // Prüfen, ob ein Gehege getroffen wurde
                 int enclosureNr = findEnclosureByPoint(imgPoint[0], imgPoint[1]);
 
                 if (enclosureNr != -1) {
+                    // Gehege gefunden → EnclosureActivity öffnen
                     Intent intent = new Intent(MapActivity.this, EnclosureActivity.class);
                     intent.putExtra("enclosureNr", enclosureNr);
                     startActivity(intent);
                 } else {
+                    // Kein Gehege angetippt
                     Toast.makeText(MapActivity.this,
                             "Kein Gehege ausgewählt",
                             Toast.LENGTH_SHORT).show();
@@ -75,7 +92,11 @@ public class MapActivity extends AppCompatActivity {
         });
     }
 
-    // Polygon-Gehege definieren
+    /**
+     * Definiert alle Polygon-Hotspots für die Gehege
+     * Jedes Polygon besteht aus einer Gehege-Nummer
+     * und einer Liste von Eckpunkten
+     */
     private void setupPolygonHotspots() {
         hotspots.clear();
 
@@ -113,6 +134,7 @@ public class MapActivity extends AppCompatActivity {
                         new PointF(2131, 1908)
                 )
         ));
+
         hotspots.add(new PolygonHotspot(
                 4,
                 Arrays.asList(
@@ -126,7 +148,13 @@ public class MapActivity extends AppCompatActivity {
         ));
     }
 
-    // Prüft, welches Gehege angeklickt wurde
+    /**
+     * Prüft, welches Gehege an der angegebenen Position liegt
+     *
+     * @param x x-Koordinate im Bild
+     * @param y y-Koordinate im Bild
+     * @return Gehege-Nummer oder -1, falls kein Gehege getroffen wurde
+     */
     private int findEnclosureByPoint(float x, float y) {
         for (PolygonHotspot h : hotspots) {
             if (pointInPolygon(x, y, h.points)) {
@@ -136,7 +164,12 @@ public class MapActivity extends AppCompatActivity {
         return -1;
     }
 
-    // Point-in-Polygon (Ray Casting)
+    /**
+     * Point-in-Polygon-Test mittels Ray-Casting-Algorithmus
+     * Prüft, ob ein Punkt innerhalb eines Polygons liegt
+     *
+     * Quelle: https://www.youtube.com/watch?v=RSXM9bgqxJM
+     */
     private boolean pointInPolygon(float x, float y, List<PointF> poly) {
         boolean inside = false;
         int n = poly.size();
@@ -158,7 +191,8 @@ public class MapActivity extends AppCompatActivity {
         return inside;
     }
 
-    // View-Koordinaten → Bild-Koordinaten
+
+    // Rechnet Touch-Koordinaten der View in tatsächliche Bild-Koordinaten um
     private float[] viewPointToImagePoint(ImageView imageView, float vx, float vy) {
         if (imageView.getDrawable() == null) {
             return null;
@@ -172,7 +206,8 @@ public class MapActivity extends AppCompatActivity {
         return pts;
     }
 
-    // Helper-Klasse für Polygon-Gehege
+
+    //Helper-Klasse zur Beschreibung eines Polygon-Geheges Enthält die Gehege-Nummer und die Polygonpunkte
     private static class PolygonHotspot {
         final int enclosureNr;
         final List<PointF> points;

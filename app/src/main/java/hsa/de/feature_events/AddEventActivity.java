@@ -18,6 +18,10 @@ import java.util.Map;
 
 import hsa.de.R;
 
+/**
+ * Activity zum Anlegen eines neuen Events für ein bestimmtes Tier
+ * Das Event wird unter animals/{animalId}/events in Firestore gespeichert
+ */
 public class AddEventActivity extends AppCompatActivity {
 
     private static final String TAG = "AddEventActivity";
@@ -27,6 +31,7 @@ public class AddEventActivity extends AppCompatActivity {
     private EditText Name;
     private EditText Info;
     private EditText Date;
+
     private Button create_event;
 
     private String animalId;
@@ -38,9 +43,14 @@ public class AddEventActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        // animalId aus dem Intent holen
         animalId = getIntent().getStringExtra("animalId");
+
+        // Sicherheitsprüfung: ohne animalId kann kein Event angelegt werden
         if (animalId == null || animalId.isEmpty()) {
-            Toast.makeText(this, "Fehler: animalId fehlt", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,
+                    "Fehler: animalId fehlt",
+                    Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -50,6 +60,7 @@ public class AddEventActivity extends AppCompatActivity {
         Date = findViewById(R.id.event_date);
         create_event = findViewById(R.id.button);
 
+        // Klick auf "Event erstellen"
         create_event.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,41 +69,54 @@ public class AddEventActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Liest die Eingaben aus den Feldern,
+     * validiert sie und speichert das Event in Firestore
+     */
     private void saveEventToFirestore() {
+
+        // Texte aus den Eingabefeldern lesen
         String nameText = Name.getText().toString().trim();
         String infoText = Info.getText().toString().trim();
         String dateText = Date.getText().toString().trim();
 
-        if (nameText.isEmpty()) { Name.setError("Bitte Namen eingeben"); return; }
-        if (infoText.isEmpty()) { Info.setError("Bitte Info eingeben"); return; }
-        if (dateText.isEmpty()) { Date.setError("Bitte Datum eingeben"); return; }
+        // Eingabevalidierung
+        if (nameText.isEmpty()) {
+            Name.setError("Bitte Namen eingeben");
+            return;
+        }
+        if (infoText.isEmpty()) {
+            Info.setError("Bitte Info eingeben");
+            return;
+        }
+        if (dateText.isEmpty()) {
+            Date.setError("Bitte Datum eingeben");
+            return;
+        }
 
+        // Event-Daten vorbereiten
         Map<String, Object> event = new HashMap<>();
         event.put("name", nameText);
         event.put("info", infoText);
         event.put("date", dateText);
 
-        // Speichern unter animals/{animalId}/events
+        // Event unter animals/{animalId}/events speichern
         db.collection("animals")
                 .document(animalId)
                 .collection("events")
                 .add(event)
-                .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "Event added with ID: " + documentReference.getId());
-                        Toast.makeText(AddEventActivity.this, "Event gespeichert!", Toast.LENGTH_SHORT).show();
-                        finish(); // zurück
-                    }
+                .addOnSuccessListener(documentReference -> {
+                    Log.d(TAG, "Event added with ID: " + documentReference.getId());
+                    Toast.makeText(AddEventActivity.this,
+                            "Event gespeichert!",
+                            Toast.LENGTH_SHORT).show();
+                    finish(); // zurück zur vorherigen Activity
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.w(TAG, "Error adding event", e);
-                        Toast.makeText(AddEventActivity.this,
-                                "Fehler beim Speichern: " + e.getMessage(),
-                                Toast.LENGTH_LONG).show();
-                    }
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Error adding event", e);
+                    Toast.makeText(AddEventActivity.this,
+                            "Fehler beim Speichern: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
                 });
     }
 }

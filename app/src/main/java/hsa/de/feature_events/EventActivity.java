@@ -25,6 +25,12 @@ import hsa.de.core.LibraryActivity;
 import hsa.de.R;
 import hsa.de.core.SettingsActivity;
 
+/**
+ * Activity zur Anzeige eines einzelnen Events
+ * Das Event gehört zu einem Tier und wird aus
+ * animals/{animalId}/events/{eventId} geladen
+ * Von hier aus kann das Event bearbeitet oder gelöscht werden
+ */
 public class EventActivity extends AppCompatActivity {
 
     private static final String TAG = "EventActivity";
@@ -40,6 +46,7 @@ public class EventActivity extends AppCompatActivity {
 
     private NavigationBarView bottomNavigation;
 
+    // Firestore-IDs
     private String animalId;
     private String eventId;
 
@@ -57,22 +64,30 @@ public class EventActivity extends AppCompatActivity {
         btEditEvent = findViewById(R.id.edit_event);
         btDeleteEvent = findViewById(R.id.delete_event);
 
+        // animalId aus dem Intent holen
         animalId = getIntent().getStringExtra("animalId");
         if (animalId == null || animalId.isEmpty()) {
-            Toast.makeText(this, "Fehler: animalId fehlt", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,
+                    "Fehler: animalId fehlt",
+                    Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
+        // eventId aus dem Intent holen
         eventId = getIntent().getStringExtra("eventId");
         if (eventId == null || eventId.isEmpty()) {
-            Toast.makeText(this, "Fehler: eventId fehlt", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,
+                    "Fehler: eventId fehlt",
+                    Toast.LENGTH_LONG).show();
             finish();
             return;
         }
 
+        // Event-Daten laden
         loadEventById(animalId, eventId);
 
+        // Klick auf "Event bearbeiten"
         btEditEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +98,7 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
+        // Klick auf "Event löschen"
         btDeleteEvent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,6 +106,7 @@ public class EventActivity extends AppCompatActivity {
             }
         });
 
+        // Bottom Navigation konfigurieren
         bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.home);
 
@@ -102,8 +119,8 @@ public class EventActivity extends AppCompatActivity {
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                     finish();
                     return true;
-                }
-                else if (id == R.id.home) {
+
+                } else if (id == R.id.home) {
                     startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                     finish();
                     return true;
@@ -128,6 +145,10 @@ public class EventActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Wird aufgerufen, wenn die Activity wieder sichtbar wird
+     * Lädt das Event neu, z. B. nach dem Bearbeiten
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -136,6 +157,10 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Lädt ein einzelnes Event aus Firestore
+     * und setzt die Daten in die TextViews
+     */
     private void loadEventById(String animalId, String eventId) {
         db.collection("animals")
                 .document(animalId)
@@ -145,6 +170,8 @@ public class EventActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot doc) {
+
+                        // Prüfen, ob das Event existiert
                         if (!doc.exists()) {
                             Toast.makeText(EventActivity.this,
                                     "Event nicht gefunden",
@@ -153,10 +180,12 @@ public class EventActivity extends AppCompatActivity {
                             return;
                         }
 
+                        // Felder aus Firestore lesen
                         String name = doc.getString("name");
                         String info = doc.getString("info");
                         String date = doc.getString("date");
 
+                        // Daten in die TextViews setzen
                         tvName.setText(name != null ? name : "");
                         tvInfo.setText(info != null ? info : "");
                         tvDate.setText(date != null ? date : "");
@@ -175,6 +204,10 @@ public class EventActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Löscht das Event aus Firestore
+     * (animals/{animalId}/events/{eventId})
+     */
     private void deleteEvent(String animalId, String eventId) {
         db.collection("animals")
                 .document(animalId)
@@ -187,7 +220,7 @@ public class EventActivity extends AppCompatActivity {
                         Toast.makeText(EventActivity.this,
                                 "Event gelöscht",
                                 Toast.LENGTH_SHORT).show();
-                        finish();
+                        finish(); // zurück zur vorherigen Activity
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
