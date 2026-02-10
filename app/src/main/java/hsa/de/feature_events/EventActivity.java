@@ -18,6 +18,7 @@ import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import hsa.de.core.MapActivity;
 import hsa.de.feature_animals.AddAnimalActivity;
 import hsa.de.core.HomeActivity;
 import hsa.de.core.LibraryActivity;
@@ -97,18 +98,26 @@ public class EventActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
 
-                if (id == R.id.home) {
-                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                    finish();
-                    return true;
-                } else if (id == R.id.settings) {
+                if (id == R.id.settings) {
                     startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                     finish();
                     return true;
+                }
+                else if (id == R.id.home) {
+                    startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                    finish();
+                    return true;
+
+                } else if (id == R.id.map) {
+                    startActivity(new Intent(getApplicationContext(), MapActivity.class));
+                    finish();
+                    return true;
+
                 } else if (id == R.id.add) {
                     startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
                     finish();
                     return true;
+
                 } else if (id == R.id.library) {
                     startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
                     finish();
