@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_events;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import hsa.de.feature_animals.AddAnimalActivity;
+import hsa.de.core.HomeActivity;
+import hsa.de.core.LibraryActivity;
+import hsa.de.R;
+import hsa.de.core.SettingsActivity;
 
 public class EventActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_events;
 
 import androidx.appcompat.app.AppCompatActivity;
 

@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_animals;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import hsa.de.core.HomeActivity;
+import hsa.de.core.LibraryActivity;
+import hsa.de.core.MapActivity;
+import hsa.de.R;
+import hsa.de.core.SettingsActivity;
 
 public class AddAnimalActivity extends AppCompatActivity {
 

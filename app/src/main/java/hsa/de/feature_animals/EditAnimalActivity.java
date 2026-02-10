@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.feature_animals;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +16,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import hsa.de.R;
 
 public class EditAnimalActivity extends AppCompatActivity {
 

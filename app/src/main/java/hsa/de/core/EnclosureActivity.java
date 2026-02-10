@@ -1,4 +1,4 @@
-package hsa.de;
+package hsa.de.core;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +20,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import hsa.de.R;
+import hsa.de.feature_animals.AddAnimalActivity;
+import hsa.de.feature_animals.Animal;
+import hsa.de.feature_animals.AnimalAdapter;
+import hsa.de.feature_animals.EditAnimalActivity;
 
 public class EnclosureActivity extends AppCompatActivity {
 
