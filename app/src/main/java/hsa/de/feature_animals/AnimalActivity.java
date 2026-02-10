@@ -35,16 +35,25 @@ import hsa.de.feature_events.Event;
 import hsa.de.feature_events.EventActivity;
 import hsa.de.feature_events.EventAdapter;
 
+/**
+ * Activity zur Anzeige eines einzelnen Tieres.
+ * Zeigt die Tierdetails (Name, Info, Gehege) sowie
+ * eine Liste aller zugehörigen Events an.
+ */
 public class AnimalActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
+
     private EventAdapter adapter;
+
     private final ArrayList<Event> events = new ArrayList<>();
 
+    // Buttons für Aktionen am Tier
     private Button btDeleteAnimal;
     private Button btEditAnimal;
     private Button btAddEvents;
 
+    // TextViews für Tierinformationen
     private TextView animal_name;
     private TextView animal_info;
     private TextView animal_enclosure;
@@ -52,6 +61,7 @@ public class AnimalActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private String animalId;
+
     private BottomNavigationView bottomNavigation;
 
     @Override
@@ -61,9 +71,17 @@ public class AnimalActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
 
+        animal_name = findViewById(R.id.animal_name);
+        animal_info = findViewById(R.id.animal_info);
+        animal_enclosure = findViewById(R.id.animal_enclosure);
+
+        // animalId aus dem Intent holen
+        // Wird benötigt, um das richtige Tier aus Firestore zu laden
         animalId = getIntent().getStringExtra("animalId");
         if (animalId == null || animalId.isEmpty()) {
-            Toast.makeText(this, "Fehler: animalId fehlt", Toast.LENGTH_LONG).show();
+            Toast.makeText(this,
+                    "Fehler: animalId fehlt",
+                    Toast.LENGTH_LONG).show();
             finish();
             return;
         }
@@ -71,13 +89,11 @@ public class AnimalActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.events_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        animal_name = findViewById(R.id.animal_name);
-        animal_info = findViewById(R.id.animal_info);
-        animal_enclosure = findViewById(R.id.animal_enclosure);
-
+        // EventAdapter initialisieren
         adapter = new EventAdapter(animalId, events, new EventAdapter.OnEventClickListener() {
             @Override
             public void onEventClick(String aId, Event event) {
+                // Öffnet die Detailansicht eines Events
                 Intent intent = new Intent(AnimalActivity.this, EventActivity.class);
                 intent.putExtra("animalId", aId);
                 intent.putExtra("eventId", event.id);
@@ -90,6 +106,7 @@ public class AnimalActivity extends AppCompatActivity {
         btEditAnimal = findViewById(R.id.edit_animal);
         btAddEvents = findViewById(R.id.add_event);
 
+        // Button: Tier löschen
         btDeleteAnimal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,6 +114,7 @@ public class AnimalActivity extends AppCompatActivity {
             }
         });
 
+        // Button: Tier bearbeiten
         btEditAnimal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +124,7 @@ public class AnimalActivity extends AppCompatActivity {
             }
         });
 
+        // Button: Neues Event hinzufügen
         btAddEvents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,12 +134,13 @@ public class AnimalActivity extends AppCompatActivity {
             }
         });
 
-        // NEU: Animal-Daten (Name/Info/Gehege) laden
+        // Tierdaten (Name, Info, Gehege) aus Firestore laden
         loadAnimalDetails(animalId);
 
-        // Events laden
+        // Events des Tieres laden
         loadEventsFirestore(animalId);
 
+        // Bottom Navigation konfigurieren
         bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.home);
 
@@ -134,8 +154,8 @@ public class AnimalActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                             finish();
                             return true;
-                        }
-                        else if (id == R.id.home) {
+
+                        } else if (id == R.id.home) {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             finish();
                             return true;
@@ -161,7 +181,10 @@ public class AnimalActivity extends AppCompatActivity {
         );
     }
 
-    // ✅ NEU: Animal-Dokument laden und TextViews setzen
+    /**
+     * Lädt die Tierdetails aus Firestore
+     * und setzt die Werte in die TextViews
+     */
     private void loadAnimalDetails(String animalId) {
         db.collection("animals")
                 .document(animalId)
@@ -169,18 +192,24 @@ public class AnimalActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot doc) {
+
+                        // Prüfen, ob das Tier existiert
                         if (doc == null || !doc.exists()) {
-                            Toast.makeText(AnimalActivity.this, "Tier nicht gefunden", Toast.LENGTH_LONG).show();
+                            Toast.makeText(AnimalActivity.this,
+                                    "Tier nicht gefunden",
+                                    Toast.LENGTH_LONG).show();
                             finish();
                             return;
                         }
 
+                        // Felder aus Firestore lesen
                         String name = doc.getString("name");
                         String info = doc.getString("info");
 
-                        // enclosureNr kann als Long kommen, wenn Firestore es so speichert
+                        // enclosureNr ist in Firestore als Number (Long) gespeichert
                         Long enclosureNrLong = doc.getLong("enclosureNr");
 
+                        // Daten in die TextViews setzen
                         animal_name.setText(name != null ? name : "");
                         animal_info.setText(info != null ? info : "");
 
@@ -201,6 +230,10 @@ public class AnimalActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Lädt alle Events des Tieres aus Firestore
+     * und aktualisiert die RecyclerView
+     */
     private void loadEventsFirestore(String animalId) {
         db.collection("animals")
                 .document(animalId)
@@ -209,27 +242,35 @@ public class AnimalActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot querySnapshot) {
+
+                        // Alte Daten löschen
                         events.clear();
+
+                        // Neue Events aus Firestore hinzufügen
                         for (QueryDocumentSnapshot doc : querySnapshot) {
                             Event e = doc.toObject(Event.class);
                             e.id = doc.getId();
                             events.add(e);
                         }
+
+                        // RecyclerView aktualisieren
                         adapter.notifyDataSetChanged();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(
-                                AnimalActivity.this,
+                        Toast.makeText(AnimalActivity.this,
                                 "Fehler beim Laden: " + e.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show();
+                                Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
+    /**
+     * Löscht das Tier-Dokument aus Firestore
+     * Hinweis: Subcollections (z. B. events) werden dabei nicht automatisch gelöscht
+     */
     private void deleteAnimal(String animalId) {
         db.collection("animals")
                 .document(animalId)
@@ -237,29 +278,29 @@ public class AnimalActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(
-                                AnimalActivity.this,
+                        Toast.makeText(AnimalActivity.this,
                                 "Animal gelöscht",
-                                Toast.LENGTH_SHORT
-                        ).show();
-                        finish();
+                                Toast.LENGTH_SHORT).show();
+                        finish(); // zurück zur vorherigen Activity
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(
-                                AnimalActivity.this,
+                        Toast.makeText(AnimalActivity.this,
                                 "Fehler beim Löschen: " + e.getMessage(),
-                                Toast.LENGTH_LONG
-                        ).show();
+                                Toast.LENGTH_LONG).show();
                     }
                 });
     }
+
+    /**
+     * Wird aufgerufen, wenn die Activity wieder sichtbar wird
+     * Lädt die Event-Liste neu, z. B. nach dem Hinzufügen oder Bearbeiten eines Events
+     */
     @Override
     protected void onResume() {
         super.onResume();
-        // Events neu laden, wenn man von AddEventActivity zurückkommt
         loadEventsFirestore(animalId);
     }
 }

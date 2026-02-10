@@ -13,6 +13,11 @@ import com.google.android.material.navigation.NavigationBarView;
 import hsa.de.R;
 import hsa.de.feature_animals.AddAnimalActivity;
 
+/**
+ * Activity für den Home Screen
+ * Dient als Startpunkt
+ */
+
 public class HomeActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigation;
@@ -22,6 +27,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home); // z.B. activity_main
 
+        // Navigationbar
         bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.home);
 

@@ -26,18 +26,27 @@ import hsa.de.feature_animals.AddAnimalActivity;
 import hsa.de.feature_animals.Animal;
 import hsa.de.feature_animals.AnimalActivity;
 import hsa.de.feature_animals.AnimalAdapter;
-import hsa.de.feature_animals.EditAnimalActivity;
 
+/**
+ * Activity zur Anzeige aller Tiere eines bestimmten Geheges
+ * Das Gehege wird über die enclosureNr per Intent übergeben
+ * (aus der MapActivity)
+ */
 public class EnclosureActivity extends AppCompatActivity {
 
     private NavigationBarView bottomNavigation;
+
     private RecyclerView recyclerView;
+
+    // TextView für den Empty-State (keine Tiere vorhanden)
     private TextView emptyView;
 
     private FirebaseFirestore db;
-    private AnimalAdapter adapter;
-    private List<Animal> animalList = new ArrayList<>();
 
+    private AnimalAdapter adapter;
+    private final List<Animal> animalList = new ArrayList<>();
+
+    // Nummer des aktuell ausgewählten Geheges
     private int enclosureNr = -1; // Standardwert: nicht gesetzt
 
     @Override
@@ -45,34 +54,41 @@ public class EnclosureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enclosure);
 
-        bottomNavigation = findViewById(R.id.bottomNavigation);
-        bottomNavigation.setSelectedItemId(R.id.home);
-
         recyclerView = findViewById(R.id.recyclerViewAnimals);
         emptyView = findViewById(R.id.emptyView);
 
+        /**
+         * RecyclerView einrichten:
+         * - vertikale Liste
+         * - Adapter mit Klick-Listener
+         */
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AnimalAdapter(this, animalList, new AnimalAdapter.OnAnimalClickListener() {
+        adapter = new AnimalAdapter(animalList, new AnimalAdapter.OnAnimalClickListener() {
             @Override
             public void onAnimalClick(Animal animal) {
+
+                // Sicherheitsprüfung
                 if (animal == null || animal.getId() == null || animal.getId().isEmpty()) {
                     return;
                 }
+
+                // Detailansicht des Tieres öffnen
                 Intent intent = new Intent(EnclosureActivity.this, AnimalActivity.class);
                 intent.putExtra("animalId", animal.getId());
                 startActivity(intent);
             }
         });
-
         recyclerView.setAdapter(adapter);
 
+        // Firestore initialisieren
         db = FirebaseFirestore.getInstance();
 
-
+        // enclosureNr aus dem Intent lesen. Unterstützt sowohl int als auch String (Fallback)
         if (getIntent().hasExtra("enclosureNr")) {
             enclosureNr = getIntent().getIntExtra("enclosureNr", -1);
+
         } else if (getIntent().hasExtra("enclosure")) {
-            // optional: wenn MapActivity "enclosure" als String schickt
+            // Optional: falls MapActivity die Nummer als String übergibt
             try {
                 enclosureNr = Integer.parseInt(getIntent().getStringExtra("enclosure"));
             } catch (Exception e) {
@@ -80,6 +96,7 @@ public class EnclosureActivity extends AppCompatActivity {
             }
         }
 
+        // Falls kein gültiges Gehege übergeben wurde
         if (enclosureNr == -1) {
             emptyView.setText("Kein Gehege ausgewählt");
             showEmpty(true);
@@ -87,6 +104,10 @@ public class EnclosureActivity extends AppCompatActivity {
             setTitle("Gehege " + enclosureNr);
             loadAnimalsForEnclosure(enclosureNr);
         }
+
+    // Navigationbar
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+        bottomNavigation.setSelectedItemId(R.id.home);
 
         bottomNavigation.setOnItemSelectedListener(
                 new NavigationBarView.OnItemSelectedListener() {
@@ -98,18 +119,22 @@ public class EnclosureActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
                             finish();
                             return true;
+
                         } else if (id == R.id.home) {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             finish();
                             return true;
+
                         } else if (id == R.id.add) {
                             startActivity(new Intent(getApplicationContext(), AddAnimalActivity.class));
                             finish();
                             return true;
+
                         } else if (id == R.id.library) {
                             startActivity(new Intent(getApplicationContext(), LibraryActivity.class));
                             finish();
                             return true;
+
                         } else if (id == R.id.map) {
                             startActivity(new Intent(getApplicationContext(), MapActivity.class));
                             finish();
@@ -121,8 +146,12 @@ public class EnclosureActivity extends AppCompatActivity {
         );
     }
 
+    // Lädt alle Tiere eines bestimmten Geheges aus Firestore
+
     private void loadAnimalsForEnclosure(int enclosureNr) {
-        showEmpty(false); // vorbereiten
+
+        // UI vorbereiten
+        showEmpty(false);
         animalList.clear();
         adapter.notifyDataSetChanged();
 
@@ -132,24 +161,27 @@ public class EnclosureActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot snapshots) {
+
+                        // Keine Tiere gefunden
                         if (snapshots.isEmpty()) {
                             emptyView.setText("Keine Tiere in diesem Gehege.");
                             showEmpty(true);
                             return;
                         }
 
+                        // Dokumente in Animal-Objekte umwandeln
                         for (QueryDocumentSnapshot doc : snapshots) {
                             Animal a = new Animal();
                             a.setId(doc.getId());
                             a.setName(doc.getString("name"));
                             a.setInfo(doc.getString("info"));
 
-                            // enclosureNr in Firestore ist vermutlich number (Long)
+                            // enclosureNr ist in Firestore meist als Number (Long) gespeichert
                             Long enc = doc.getLong("enclosureNr");
                             if (enc != null) {
                                 a.setEnclosureNr(enc.intValue());
                             } else {
-                                // falls als String gespeichert
+                                // Fallback: falls enclosureNr als String gespeichert wurde
                                 try {
                                     a.setEnclosureNr(Integer.parseInt(doc.getString("enclosureNr")));
                                 } catch (Exception ignored) {}
@@ -158,6 +190,7 @@ public class EnclosureActivity extends AppCompatActivity {
                             animalList.add(a);
                         }
 
+                        // Adapter aktualisieren
                         adapter.setData(animalList);
                         showEmpty(false);
                     }
@@ -171,6 +204,10 @@ public class EnclosureActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Zeigt oder versteckt den Empty-State,
+     * je nachdem ob Tiere vorhanden sind
+     */
     private void showEmpty(boolean show) {
         if (show) {
             emptyView.setVisibility(View.VISIBLE);

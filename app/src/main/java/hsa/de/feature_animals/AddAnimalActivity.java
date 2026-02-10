@@ -27,14 +27,23 @@ import hsa.de.core.MapActivity;
 import hsa.de.R;
 import hsa.de.core.SettingsActivity;
 
+/**
+ * Activity zum Anlegen eines neuen Tieres
+ * Die eingegebenen Daten werden als neues Dokument
+ * in der Firestore-Collection "animals" gespeichert
+ */
 public class AddAnimalActivity extends AppCompatActivity {
 
     private static final String TAG = "AddAnimalActivity";
+
     private FirebaseFirestore db;
+
     private EditText name;
     private EditText info;
     private EditText enclosure;
+
     private Button create_animal;
+
     private NavigationBarView bottomNavigation;
 
     @Override
@@ -49,25 +58,29 @@ public class AddAnimalActivity extends AppCompatActivity {
         enclosure = findViewById(R.id.enclosure);
         create_animal = findViewById(R.id.button);
 
+        // Button: neues Tier speichern
         create_animal.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveAnimalToFirestore();
             }
         });
+
         bottomNavigation = findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.add);
 
+        //Navigationbar
         bottomNavigation.setOnItemSelectedListener(
                 new NavigationBarView.OnItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                         int id = item.getItemId();
 
+                        // Aktuelle Seite (Add) – nichts tun
                         if (id == R.id.add) {
                             return true;
-                        }
-                        else if (id == R.id.home) {
+
+                        } else if (id == R.id.home) {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                             finish();
                             return true;
@@ -93,11 +106,19 @@ public class AddAnimalActivity extends AppCompatActivity {
         );
     }
 
+    /**
+     * Liest die Eingaben aus den Feldern,
+     * validiert sie und speichert ein neues Tier
+     * in der Firestore-Datenbank.
+     */
     private void saveAnimalToFirestore() {
+
+        // Texte aus den Eingabefeldern lesen
         String nameText = name.getText().toString().trim();
         String infoText = info.getText().toString().trim();
         String enclosureText = enclosure.getText().toString().trim();
 
+        // Eingabevalidierung
         if (nameText.isEmpty()) {
             name.setError("Bitte Name eingeben");
             return;
@@ -111,6 +132,7 @@ public class AddAnimalActivity extends AppCompatActivity {
             return;
         }
 
+        // Gehege-Nummer in int umwandeln
         int enclosureNr;
         try {
             enclosureNr = Integer.parseInt(enclosureText);
@@ -119,11 +141,13 @@ public class AddAnimalActivity extends AppCompatActivity {
             return;
         }
 
+        // Tierdaten für Firestore vorbereiten
         Map<String, Object> animal = new HashMap<>();
         animal.put("name", nameText);
         animal.put("info", infoText);
         animal.put("enclosureNr", enclosureNr);
 
+        // Neues Tier in Firestore speichern (Collection: animals)
         db.collection("animals")
                 .add(animal)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -131,8 +155,10 @@ public class AddAnimalActivity extends AppCompatActivity {
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "Document added with ID: " + documentReference.getId());
                         Toast.makeText(AddAnimalActivity.this,
-                                "Tier gespeichert!", Toast.LENGTH_SHORT).show();
+                                "Tier gespeichert!",
+                                Toast.LENGTH_SHORT).show();
 
+                        // Eingabefelder nach dem Speichern leeren
                         name.setText("");
                         info.setText("");
                         enclosure.setText("");
