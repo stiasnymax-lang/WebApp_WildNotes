@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import hsa.de.core.HomeActivity;
 import hsa.de.core.LibraryActivity;
 import hsa.de.R;
+import hsa.de.core.MapActivity;
 import hsa.de.core.SettingsActivity;
 import hsa.de.feature_events.AddEventActivity;
 import hsa.de.feature_events.Event;
@@ -139,8 +140,8 @@ public class AnimalActivity extends AppCompatActivity {
                             finish();
                             return true;
 
-                        } else if (id == R.id.settings) {
-                            startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+                        } else if (id == R.id.map) {
+                            startActivity(new Intent(getApplicationContext(), MapActivity.class));
                             finish();
                             return true;
 

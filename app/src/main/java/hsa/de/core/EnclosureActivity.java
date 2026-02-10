@@ -24,6 +24,7 @@ import java.util.List;
 import hsa.de.R;
 import hsa.de.feature_animals.AddAnimalActivity;
 import hsa.de.feature_animals.Animal;
+import hsa.de.feature_animals.AnimalActivity;
 import hsa.de.feature_animals.AnimalAdapter;
 import hsa.de.feature_animals.EditAnimalActivity;
 
@@ -57,7 +58,7 @@ public class EnclosureActivity extends AppCompatActivity {
                 if (animal == null || animal.getId() == null || animal.getId().isEmpty()) {
                     return;
                 }
-                Intent intent = new Intent(EnclosureActivity.this, EditAnimalActivity.class);
+                Intent intent = new Intent(EnclosureActivity.this, AnimalActivity.class);
                 intent.putExtra("animalId", animal.getId());
                 startActivity(intent);
             }
