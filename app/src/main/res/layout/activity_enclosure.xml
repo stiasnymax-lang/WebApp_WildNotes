@@ -5,7 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Einfacher Titel / Leerzustand -->
+    <!-- Gehege-Infos (Name + Beschreibung) -->
+    <LinearLayout
+        android:id="@+id/enclosureInfoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textViewEnclosureName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="4dp"/>
+
+        <TextView
+            android:id="@+id/textViewEnclosureDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:paddingBottom="8dp"/>
+
+    </LinearLayout>
+
+    <!-- Leerzustand / Fehlermeldung -->
     <TextView
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
@@ -13,16 +38,20 @@
         android:text="Lade..."
         android:gravity="center"
         android:padding="16dp"
+        android:layout_marginTop="120dp"
         android:visibility="gone"/>
 
+    <!-- Tierliste -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewAnimals"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="12dp"
+        android:paddingTop="120dp"
+        android:paddingBottom="60dp"
         android:clipToPadding="false"/>
 
-    <!-- Bottom Navigation (dein vorhandenes Element) -->
+    <!-- Bottom Navigation -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"

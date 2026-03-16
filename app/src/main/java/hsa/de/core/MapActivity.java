@@ -138,261 +138,261 @@ public class MapActivity extends AppCompatActivity {
         hotspots.add(new PolygonHotspot(
                 5,
                 Arrays.asList(
-                        new PointF(528, 692),
-                        new PointF(563, 691),
-                        new PointF(554, 758),
-                        new PointF(524, 758)
+                        new PointF(1390, 1822),
+                        new PointF(1482, 1819),
+                        new PointF(1458, 1995),
+                        new PointF(1379, 1995)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 6,
                 Arrays.asList(
-                        new PointF(562, 694),
-                        new PointF(595, 688),
-                        new PointF(625, 693),
-                        new PointF(653, 711),
-                        new PointF(679, 735),
-                        new PointF(600, 828),
-                        new PointF(571, 826),
-                        new PointF(548, 805),
-                        new PointF(548, 773),
-                        new PointF(554, 752)
+                        new PointF(1479, 1827),
+                        new PointF(1566, 1811),
+                        new PointF(1645, 1824),
+                        new PointF(1718, 1871),
+                        new PointF(1787, 1934),
+                        new PointF(1579, 2179),
+                        new PointF(1503, 2174),
+                        new PointF(1442, 2119),
+                        new PointF(1442, 2034),
+                        new PointF(1458, 1979)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 7,
                 Arrays.asList(
-                        new PointF(692, 860),
-                        new PointF(616, 936),
-                        new PointF(683, 1041),
-                        new PointF(767, 957)
+                        new PointF(1821, 2263),
+                        new PointF(1621, 2463),
+                        new PointF(1797, 2740),
+                        new PointF(2017, 2519)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 8,
                 Arrays.asList(
-                        new PointF(742, 981),
-                        new PointF(795, 1032),
-                        new PointF(800, 1073),
-                        new PointF(768, 1079),
-                        new PointF(712, 1106),
-                        new PointF(683, 1042)
+                        new PointF(1952, 2581),
+                        new PointF(2092, 2716),
+                        new PointF(2106, 2824),
+                        new PointF(2022, 2840),
+                        new PointF(1874, 2911),
+                        new PointF(1797, 2742)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 9,
                 Arrays.asList(
-                        new PointF(685, 1047),
-                        new PointF(619, 1068),
-                        new PointF(660, 1147),
-                        new PointF(717, 1120)
+                        new PointF(1803, 2756),
+                        new PointF(1629, 2811),
+                        new PointF(1737, 3019),
+                        new PointF(1889, 2948)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 10,
                 Arrays.asList(
-                        new PointF(724, 1144),
-                        new PointF(671, 1164),
-                        new PointF(694, 1212),
-                        new PointF(750, 1194)
+                        new PointF(1905, 3011),
+                        new PointF(1765, 3063),
+                        new PointF(1827, 3190),
+                        new PointF(1974, 3142)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 11,
                 Arrays.asList(
-                        new PointF(846, 1124),
-                        new PointF(791, 1138),
-                        new PointF(836, 1259),
-                        new PointF(884, 1237)
+                        new PointF(2227, 2958),
+                        new PointF(2081, 2995),
+                        new PointF(2200, 3314),
+                        new PointF(2327, 3257)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 12,
                 Arrays.asList(
-                        new PointF(765, 1220),
-                        new PointF(627, 1267),
-                        new PointF(653, 1340),
-                        new PointF(720, 1322),
-                        new PointF(754, 1389),
-                        new PointF(783, 1372),
-                        new PointF(759, 1311),
-                        new PointF(797, 1296)
+                        new PointF(2013, 3211),
+                        new PointF(1650, 3335),
+                        new PointF(1718, 3527),
+                        new PointF(1895, 3479),
+                        new PointF(1984, 3657),
+                        new PointF(2060, 3611),
+                        new PointF(1997, 3451),
+                        new PointF(2097, 3411)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 13,
                 Arrays.asList(
-                        new PointF(797, 1296),
-                        new PointF(821, 1352),
-                        new PointF(788, 1370),
-                        new PointF(759, 1311)
+                        new PointF(2097, 3411),
+                        new PointF(2161, 3559),
+                        new PointF(2074, 3606),
+                        new PointF(1997, 3451)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 14,
                 Arrays.asList(
-                        new PointF(754, 1390),
-                        new PointF(797, 1460),
-                        new PointF(870, 1420),
-                        new PointF(821, 1352)
+                        new PointF(1984, 3659),
+                        new PointF(2097, 3843),
+                        new PointF(2290, 3738),
+                        new PointF(2161, 3559)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 15,
                 Arrays.asList(
-                        new PointF(981, 1202),
-                        new PointF(917, 1267),
-                        new PointF(961, 1308),
-                        new PointF(1020, 1238)
+                        new PointF(2582, 3164),
+                        new PointF(2413, 3335),
+                        new PointF(2529, 3442),
+                        new PointF(2685, 3259)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 16,
                 Arrays.asList(
-                        new PointF(891, 1270),
-                        new PointF(846, 1313),
-                        new PointF(965, 1442),
-                        new PointF(1013, 1393)
+                        new PointF(2345, 3343),
+                        new PointF(2227, 3455),
+                        new PointF(2540, 3795),
+                        new PointF(2666, 3669)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 17,
                 Arrays.asList(
-                        new PointF(797, 1461),
-                        new PointF(809, 1712),
-                        new PointF(1016, 1648),
-                        new PointF(873, 1420)
+                        new PointF(2097, 3843),
+                        new PointF(2129, 4504),
+                        new PointF(2674, 4338),
+                        new PointF(2298, 3738)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 18,
                 Arrays.asList(
-                        new PointF(780, 1642),
-                        new PointF(744, 1651),
-                        new PointF(761, 1712),
-                        new PointF(802, 1709)
+                        new PointF(2053, 4322),
+                        new PointF(1958, 4346),
+                        new PointF(2003, 4504),
+                        new PointF(2111, 4497)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 19,
                 Arrays.asList(
-                        new PointF(744, 1656),
-                        new PointF(704, 1665),
-                        new PointF(718, 1718),
-                        new PointF(759, 1712)
+                        new PointF(1958, 4359),
+                        new PointF(1853, 4383),
+                        new PointF(1890, 4524),
+                        new PointF(1997, 4504)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 20,
                 Arrays.asList(
-                        new PointF(703, 1670),
-                        new PointF(665, 1679),
-                        new PointF(685, 1733),
-                        new PointF(718, 1718)
+                        new PointF(1850, 4396),
+                        new PointF(1750, 4420),
+                        new PointF(1803, 4561),
+                        new PointF(1890, 4524)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 21,
                 Arrays.asList(
-                        new PointF(639, 1680),
-                        new PointF(603, 1691),
-                        new PointF(615, 1741),
-                        new PointF(659, 1733)
+                        new PointF(1682, 4422),
+                        new PointF(1587, 4448),
+                        new PointF(1619, 4582),
+                        new PointF(1734, 4561)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 22,
                 Arrays.asList(
-                        new PointF(601, 1691),
-                        new PointF(563, 1701),
-                        new PointF(569, 1744),
-                        new PointF(615, 1741)
+                        new PointF(1582, 4451),
+                        new PointF(1482, 4475),
+                        new PointF(1498, 4585),
+                        new PointF(1619, 4582)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 23,
                 Arrays.asList(
-                        new PointF(475, 1436),
-                        new PointF(357, 1457),
-                        new PointF(424, 1770),
-                        new PointF(569, 1746),
-                        new PointF(539, 1588),
-                        new PointF(502, 1562)
+                        new PointF(1250, 3779),
+                        new PointF(939, 3832),
+                        new PointF(1116, 4658),
+                        new PointF(1498, 4590),
+                        new PointF(1419, 4180),
+                        new PointF(1321, 4111)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 24,
                 Arrays.asList(
-                        new PointF(334, 1346),
-                        new PointF(458, 1323),
-                        new PointF(475, 1408),
-                        new PointF(474, 1437),
-                        new PointF(358, 1460)
+                        new PointF(879, 3543),
+                        new PointF(1206, 3480),
+                        new PointF(1250, 3706),
+                        new PointF(1247, 3779),
+                        new PointF(942, 3840)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 25,
                 Arrays.asList(
-                        new PointF(291, 1101),
-                        new PointF(408, 1086),
-                        new PointF(439, 1214),
-                        new PointF(302, 1234)
+                        new PointF(766, 2898),
+                        new PointF(1074, 2858),
+                        new PointF(1156, 3195),
+                        new PointF(795, 3248)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 26,
                 Arrays.asList(
-                        new PointF(269, 1006),
-                        new PointF(346, 987),
-                        new PointF(357, 1039),
-                        new PointF(401, 1018),
-                        new PointF(414, 1066),
-                        new PointF(372, 1062),
-                        new PointF(372, 1089),
-                        new PointF(291, 1103)
+                        new PointF(708, 2648),
+                        new PointF(911, 2598),
+                        new PointF(940, 2735),
+                        new PointF(1056, 2679),
+                        new PointF(1090, 2806),
+                        new PointF(979, 2795),
+                        new PointF(979, 2866),
+                        new PointF(766, 2903)
                 )
         ));
 
         hotspots.add(new PolygonHotspot(
                 27,
                 Arrays.asList(
-                        new PointF(516, 1439),
-                        new PointF(524, 1474),
-                        new PointF(510, 1474),
-                        new PointF(524, 1533),
-                        new PointF(545, 1571),
-                        new PointF(575, 1545),
-                        new PointF(610, 1545),
-                        new PointF(644, 1553),
-                        new PointF(660, 1572),
-                        new PointF(683, 1536),
-                        new PointF(648, 1507),
-                        new PointF(610, 1492),
-                        new PointF(606, 1449),
-                        new PointF(594, 1449),
-                        new PointF(594, 1426),
-                        new PointF(581, 1425)
+                        new PointF(1358, 3786),
+                        new PointF(1379, 3879),
+                        new PointF(1342, 3879),
+                        new PointF(1379, 4035),
+                        new PointF(1434, 4134),
+                        new PointF(1513, 4066),
+                        new PointF(1606, 4066),
+                        new PointF(1695, 4087),
+                        new PointF(1737, 4137),
+                        new PointF(1797, 4038),
+                        new PointF(1705, 3967),
+                        new PointF(1606, 3924),
+                        new PointF(1595, 3811),
+                        new PointF(1563, 3811),
+                        new PointF(1563, 3751),
+                        new PointF(1529, 3748)
                 )
         ));
     }

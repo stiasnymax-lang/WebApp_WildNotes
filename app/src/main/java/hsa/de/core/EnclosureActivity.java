@@ -31,6 +31,9 @@ import hsa.de.feature_animals.AnimalAdapter;
  * Activity zur Anzeige aller Tiere eines bestimmten Geheges
  * Das Gehege wird über die enclosureNr per Intent übergeben
  * (aus der MapActivity)
+ * Zusätzlich werden Gehege-Infos (Name, Beschreibung) aus der
+ * enclosures Collection geladen – so wird das Gehege auch
+ * angezeigt, wenn noch keine Tiere vorhanden sind
  */
 public class EnclosureActivity extends AppCompatActivity {
 
@@ -40,6 +43,10 @@ public class EnclosureActivity extends AppCompatActivity {
 
     // TextView für den Empty-State (keine Tiere vorhanden)
     private TextView emptyView;
+
+    // TextViews für Gehege-Infos aus der enclosures Collection
+    private TextView textViewEnclosureName;
+    private TextView textViewEnclosureDescription;
 
     private FirebaseFirestore db;
 
@@ -56,6 +63,8 @@ public class EnclosureActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewAnimals);
         emptyView = findViewById(R.id.emptyView);
+        textViewEnclosureName = findViewById(R.id.textViewEnclosureName);
+        textViewEnclosureDescription = findViewById(R.id.textViewEnclosureDescription);
 
         /**
          * RecyclerView einrichten:
@@ -102,11 +111,13 @@ public class EnclosureActivity extends AppCompatActivity {
             showEmpty(true);
         } else {
             setTitle("Gehege " + enclosureNr);
+            // Gehege-Infos und Tiere separat laden
+            loadEnclosure(enclosureNr);
             loadAnimalsForEnclosure(enclosureNr);
         }
 
-    // Navigationbar
-        bottomNavigation = findViewById(R.id.bottomNavigation);
+        // Navigationbar
+        bottomNavigation = (NavigationBarView) findViewById(R.id.bottomNavigation);
         bottomNavigation.setSelectedItemId(R.id.home);
 
         bottomNavigation.setOnItemSelectedListener(
@@ -146,8 +157,50 @@ public class EnclosureActivity extends AppCompatActivity {
         );
     }
 
-    // Lädt alle Tiere eines bestimmten Geheges aus Firestore
+    /**
+     * Lädt Name und Beschreibung des Geheges aus der enclosures Collection
+     * Wird unabhängig von den Tieren geladen, damit das Gehege
+     * auch ohne Tiere angezeigt werden kann
+     */
+    private void loadEnclosure(int enclosureNr) {
+        db.collection("enclosures")
+                .whereEqualTo("enclosureNr", enclosureNr)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot snapshots) {
+                        if (!snapshots.isEmpty()) {
+                            // Erstes (und einziges) Dokument dieses Geheges holen
+                            QueryDocumentSnapshot doc =
+                                    (QueryDocumentSnapshot) snapshots.getDocuments().get(0);
 
+                            String name        = doc.getString("name");
+                            String description = doc.getString("description");
+
+                            // Name setzen – auch als Activity-Titel
+                            if (name != null) {
+                                textViewEnclosureName.setText(name);
+                                setTitle(name);
+                            }
+                            if (description != null) {
+                                textViewEnclosureDescription.setText(description);
+                            }
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Fallback: Gehege-Nummer als Titel anzeigen
+                        textViewEnclosureName.setText("Gehege " + enclosureNr);
+                    }
+                });
+    }
+
+    /**
+     * Lädt alle Tiere eines bestimmten Geheges aus Firestore
+     * Zeigt Empty-State wenn keine Tiere vorhanden sind
+     */
     private void loadAnimalsForEnclosure(int enclosureNr) {
 
         // UI vorbereiten
