@@ -207,7 +207,8 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-    //Helper-Klasse zur Beschreibung eines Polygon-Geheges Enthält die Gehege-Nummer und die Polygonpunkte
+    //Helper-Klasse zur Beschreibung eines Polygon-Geheges
+    // Enthält die Gehege-Nummer und die Polygonpunkte
     private static class PolygonHotspot {
         final int enclosureNr;
         final List<PointF> points;
