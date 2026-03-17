@@ -44,10 +44,6 @@ public class EnclosureActivity extends AppCompatActivity {
     // TextView für den Empty-State (keine Tiere vorhanden)
     private TextView emptyView;
 
-    // TextViews für Gehege-Infos aus der enclosures Collection
-    private TextView textViewEnclosureName;
-    private TextView textViewEnclosureDescription;
-
     private FirebaseFirestore db;
 
     private AnimalAdapter adapter;
@@ -61,10 +57,8 @@ public class EnclosureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enclosure);
 
-        recyclerView = findViewById(R.id.recyclerViewAnimals);
-        emptyView = findViewById(R.id.emptyView);
-        textViewEnclosureName = findViewById(R.id.textViewEnclosureName);
-        textViewEnclosureDescription = findViewById(R.id.textViewEnclosureDescription);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewAnimals);
+        emptyView    = (TextView)     findViewById(R.id.emptyView);
 
         /**
          * RecyclerView einrichten:
@@ -174,16 +168,11 @@ public class EnclosureActivity extends AppCompatActivity {
                             QueryDocumentSnapshot doc =
                                     (QueryDocumentSnapshot) snapshots.getDocuments().get(0);
 
-                            String name        = doc.getString("name");
-                            String description = doc.getString("description");
+                            String name = doc.getString("name");
 
-                            // Name setzen – auch als Activity-Titel
+                            // Name als Activity-Titel setzen
                             if (name != null) {
-                                textViewEnclosureName.setText(name);
                                 setTitle(name);
-                            }
-                            if (description != null) {
-                                textViewEnclosureDescription.setText(description);
                             }
                         }
                     }
@@ -192,7 +181,7 @@ public class EnclosureActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         // Fallback: Gehege-Nummer als Titel anzeigen
-                        textViewEnclosureName.setText("Gehege " + enclosureNr);
+                        setTitle("Gehege " + enclosureNr);
                     }
                 });
     }
