@@ -33,9 +33,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        editTextEmail    = (EditText) findViewById(R.id.email);
-        editTextPassword = (EditText) findViewById(R.id.password);
-        buttonReg        = (Button)   findViewById(R.id.btn_register);
+        editTextEmail = findViewById(R.id.email);
+        editTextPassword = findViewById(R.id.password);
+        buttonReg = findViewById(R.id.btn_register);
 
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,11 +46,17 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        String email    = editTextEmail.getText().toString().trim();
+        String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
             editTextEmail.setError("E-Mail eingeben");
+            editTextEmail.requestFocus();
+            return;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            editTextEmail.setError("Ungültige E-Mail-Adresse");
             editTextEmail.requestFocus();
             return;
         }
@@ -67,20 +73,24 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        // Firebase erstellt den Benutzer mit E-Mail + Passwort
+        buttonReg.setEnabled(false);
+
         mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             sendVerificationEmail();
                         } else {
+                            buttonReg.setEnabled(true);
+
                             String fehler = "Registrierung fehlgeschlagen";
-                            if (task.getException() != null) {
+                            if (task.getException() != null && task.getException().getMessage() != null) {
                                 fehler = task.getException().getMessage();
                             }
+
                             Toast.makeText(
-                                    getApplicationContext(),
+                                    RegisterActivity.this,
                                     fehler,
                                     Toast.LENGTH_LONG
                             ).show();
@@ -89,38 +99,52 @@ public class RegisterActivity extends AppCompatActivity {
                 });
     }
 
-    // Bestätigungsmail an die registrierte E-Mail senden
     private void sendVerificationEmail() {
         FirebaseUser user = mAuth.getCurrentUser();
 
         if (user != null) {
             user.sendEmailVerification()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> emailTask) {
+
                             if (emailTask.isSuccessful()) {
                                 Toast.makeText(
-                                        getApplicationContext(),
+                                        RegisterActivity.this,
                                         "Konto erstellt! Bitte E-Mail bestätigen.",
                                         Toast.LENGTH_LONG
                                 ).show();
                             } else {
+                                String fehler = "Konto erstellt, aber Bestätigungsmail fehlgeschlagen.";
+                                if (emailTask.getException() != null && emailTask.getException().getMessage() != null) {
+                                    fehler = fehler + "\n" + emailTask.getException().getMessage();
+                                }
+
                                 Toast.makeText(
-                                        getApplicationContext(),
-                                        "Konto erstellt, aber Bestätigungsmail fehlgeschlagen.",
+                                        RegisterActivity.this,
+                                        fehler,
                                         Toast.LENGTH_LONG
                                 ).show();
                             }
+
+                            mAuth.signOut();
                             goToLogin();
                         }
                     });
         } else {
-            goToLogin();
+            Toast.makeText(
+                    RegisterActivity.this,
+                    "Benutzer konnte nach Registrierung nicht geladen werden.",
+                    Toast.LENGTH_LONG
+            ).show();
+
+            buttonReg.setEnabled(true);
         }
     }
 
     private void goToLogin() {
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }

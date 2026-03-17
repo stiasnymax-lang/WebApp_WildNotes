@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import hsa.de.core.HomeActivity;
 import hsa.de.R;
@@ -57,12 +58,25 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Login Succesfull", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                                startActivity(intent);
-                                finish();
+                                FirebaseUser user = mAuth.getCurrentUser();
+
+                                if (user != null && user.isEmailVerified()) {
+                                    // E-Mail bestätigt → Login erlauben
+                                    Toast.makeText(getApplicationContext(), "Login erfolgreich", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    // E-Mail noch nicht bestätigt → abmelden & Hinweis
+                                    mAuth.signOut();
+                                    Toast.makeText(
+                                            getApplicationContext(),
+                                            "Bitte bestätige zuerst deine E-Mail-Adresse.",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+                                }
                             } else {
-                                Toast.makeText(getApplicationContext(), "Authentication failed,", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Login fehlgeschlagen.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
